@@ -1,0 +1,16 @@
+SELECT 
+    f.title,
+    SUM(p.amount) AS total_revenue
+FROM 
+    payment p
+JOIN 
+    rental r USING (rental_id)
+JOIN 
+    inventory i USING (inventory_id)
+JOIN 
+    film f USING (film_id)
+GROUP BY 
+    f.title
+ORDER BY 
+    total_revenue DESC
+LIMIT 5;
