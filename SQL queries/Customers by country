@@ -1,0 +1,16 @@
+# Show the customer count by country
+SELECT 			
+    ctry.country,			
+    COUNT(cust.customer_id) AS number_of_customers			
+FROM 			
+    customer cust			
+JOIN 			
+    address addr ON cust.address_id = addr.address_id			
+JOIN 			
+    city ci ON addr.city_id = ci.city_id			
+JOIN 			
+    country ctry ON ci.country_id = ctry.country_id			
+GROUP BY 			
+    ctry.country			
+ORDER BY 			
+    number_of_customers DESC;			
