@@ -1,0 +1,21 @@
+# Show the revenue by country
+
+SELECT 	
+    ctry.country, 	
+    SUM(p.amount) AS total_revenue	
+FROM 	
+    customer c	
+JOIN 	
+    address a ON c.address_id = a.address_id	
+JOIN 	
+    city ci ON a.city_id = ci.city_id	
+JOIN 	
+    country ctry ON ci.country_id = ctry.country_id	
+JOIN 	
+    rental r ON c.customer_id = r.customer_id	
+JOIN 	
+    payment p ON r.rental_id = p.rental_id	
+GROUP BY 	
+    ctry.country	
+ORDER BY 	
+    total_revenue DESC;	 # Revenue in descending order
