@@ -1,0 +1,40 @@
+Find the average amount paid by the top 5 customers within the top 10 cities
+
+# Find the top 10 cities 
+WITH top_cities AS (
+    SELECT 
+        d.country_id,
+        c.city_id,
+        d.country,
+        c.city
+    FROM customer a
+    INNER JOIN address b ON a.address_id = b.address_id
+    INNER JOIN city c ON b.city_id = c.city_id
+    INNER JOIN country d ON c.country_id = d.country_id
+    GROUP BY d.country_id, c.city_id, d.country, c.city
+    ORDER BY COUNT(a.customer_id) DESC
+    LIMIT 10
+),
+
+# Find top customers within the top 10 cities 
+top_customers AS (
+    SELECT 
+        a.customer_id,
+        a.first_name,
+        a.last_name,
+        tc.city,
+        tc.country,
+        SUM(p.amount) AS total_amount_paid
+    FROM payment p
+    INNER JOIN rental r ON p.rental_id = r.rental_id
+    INNER JOIN customer a ON r.customer_id = a.customer_id
+    INNER JOIN address b ON a.address_id = b.address_id
+    INNER JOIN city c ON b.city_id = c.city_id
+    INNER JOIN top_cities tc ON c.city_id = tc.city_id
+    GROUP BY a.customer_id, a.first_name, a.last_name, tc.city, tc.country
+    ORDER BY total_amount_paid DESC
+    LIMIT 5
+)
+
+SELECT AVG(total_amount_paid) AS average
+FROM top_customers;
